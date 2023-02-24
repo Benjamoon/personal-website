@@ -19,10 +19,13 @@ jobs:
         run: npm run build
       
       - name: Create release
+        id: create_release
         uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ github.run_number }}
-          release_name: Release v${{ github.run_number }}
+          tag_name: v${{ github.sha }}
+          release_name: Release v${{ github.sha }}
           body: |
             Changes in this release:
             - Built project using npm
@@ -38,8 +41,10 @@ jobs:
       
       - name: Attach assets to release
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create-release.outputs.upload_url }}
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: dist
           asset_name: dist
           asset_content_type: application/zip

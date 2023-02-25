@@ -1,7 +1,7 @@
 ---
 layout: base.njk
-title: Eleventy Web Starter - Eleventy, esbuild, Tailwind and PostCSS
-description: Eleventy Web Starter is a lightweight Eleventy boilerplate utilising esbuild, Tailwind CSS and Post CSS
+title: BenLawrence.me
+description: 
 ---
 
 <main id="main" class="p-6 md:p-12 lg:p-16 border-t-8 border-gray-200">
@@ -12,7 +12,7 @@ description: Eleventy Web Starter is a lightweight Eleventy boilerplate utilisin
         <ul class="max-w-md space-y-1 text-gray-500 list-disc list-inside dark:text-gray-400">
 
             {% for item in projects %}
-                <li>{{item.title}}</li>
+                <li><a href="{{item.link}}">{{item.title}}</a></li>
             {% endfor %}
 
         </ul>

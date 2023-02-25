@@ -3,7 +3,7 @@ name: Build and Release
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   build-and-release:
@@ -18,11 +18,17 @@ jobs:
       - name: Build project
         run: npm run build
       
+      - name: Zip dist directory
+        run: zip -r dist.zip ./dist
+      
       - name: Create release
+        id: create_release
         uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ github.run_number }}
-          release_name: Release v${{ github.run_number }}
+          tag_name: v${{ github.sha }}
+          release_name: Release v${{ github.sha }}
           body: |
             Changes in this release:
             - Built project using npm
@@ -30,16 +36,13 @@ jobs:
           draft: false
           prerelease: false
       
-      - name: Upload assets
-        uses: actions/upload-artifact@v2
-        with:
-          name: dist
-          path: dist
-      
-      - name: Attach assets to release
+      - name: Upload asset
+        id: upload_asset
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create-release.outputs.upload_url }}
-          asset_path: dist
-          asset_name: dist
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist.zip
+          asset_name: dist.zip
           asset_content_type: application/zip
